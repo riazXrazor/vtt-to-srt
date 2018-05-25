@@ -21,8 +21,45 @@ module.exports = function () {
   var write = function write(line, enc, cb) {
 
     if (!line.trim()) return cb();
+    
+    if(line.match(/(\d{2}:\d{2})\.(\d{3}\s+)\-\-\>(\s+\d{2}:\d{2})\.(\d{3}\s*)/g))
+    {
+      var vttComp = line.split('-->')
+      var vttLine = vttComp.map(function(item){
+        item = item.replace('.',',');
+        if(item.split(":").length < 3)
+        {
+          item = '00:'+item.trim(); 
+        }  
+        return item;
+      }).join(' --> ');
+      vttLine = vttLine+"\r\n"
+    }
+    else if(line.match(/(\d{2}:\d{2}:\d{2})\.(\d{3}\s+)\-\-\>(\s+\d{2}:\d{2}:\d{2})\.(\d{3}\s*)/g))
+    {
+      var vttComp = line.split('-->')
+      var vttLine = vttComp.map(function(item){
+        item = item.replace('.',',');
+        if(item.split(":").length < 3)
+        {
+          item = '00:'+item.trim(); 
+        }  
+        return item;
+      }).join(' --> ');
+      vttLine = "\r\n"+vttLine+"\r\n"
+    }
+    else if(line.match(/(WEBVTT\s*(FILE)?.*)(\r\n)*/g))
+    {
+      var vttLine = line.replace(/(WEBVTT\s*(FILE)?.*)(\r\n)*/g, '')
+    }
+    else
+    {
+      var vttLine = line+"\r\n";
+    }     
+                  
 
-    var vttLine = line.replace(/(WEBVTT\s*(FILE)?.*)(\r\n)*/g, '').replace(/(\d{2}:\d{2}:\d{2})\.(\d{3}\s+)\-\-\>(\s+\d{2}:\d{2}:\d{2})\.(\d{3}\s*)/g, '$1,$2-->$3,$4').replace(/\<.+\>(.+)/g, '$1').replace(/\<.+\>(.+)\<.+\/\>/g, '$1') + '\r\n';
+                  
+
 
     if (!vttLine.trim()) return cb();
 

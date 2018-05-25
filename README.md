@@ -16,9 +16,9 @@ npm install node-vtt-to-srt --global
 You may use it from the terminal if vtt-to-str was installed globally
 
 ```bash
-vtt-to-srt example.vtt example.srt
+node-vtt-to-srt example.vtt example.srt
 cat example.vtt | vtt-to-srt > example.str
-vtt-to-srt example.str < example.vtt
+node-vtt-to-srt example.str < example.vtt
 ```
 
 ## Usage
