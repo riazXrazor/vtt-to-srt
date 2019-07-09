@@ -69,9 +69,9 @@ module.exports = function () {
       
          if (/^[0-9]+:/m.test(vttLine)) {
             if (count === 0) {
-              vttLine = ++count + '\r\n' + vttLine;
+              vttLine = ++count + '\r' + vttLine;
             } else {
-              vttLine = '\r\n' + ++count + '\r\n' + vttLine;
+              vttLine = '\r\n' + ++count + '\r' + vttLine;
             }
           }
 
