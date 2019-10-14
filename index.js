@@ -12,12 +12,14 @@ var _pumpify = require('pumpify');
 
 var _pumpify2 = _interopRequireDefault(_pumpify);
 
+var EOL = require('os').EOL;
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 module.exports = function () {
 
   var count = 0;
-
+  var reg = new RegExp('(WEBVTT\s*(FILE)?.*)('+EOL+')*', 'g' )
   var write = function write(line, enc, cb) {
 
     if (!line.trim()) return cb();
@@ -33,7 +35,7 @@ module.exports = function () {
         }  
         return item;
       }).join(' --> ');
-      vttLine = vttLine+"\r\n"
+      vttLine = vttLine+EOL
     }
     else if(line.match(/(\d{2}:\d{2}:\d{2})\.(\d{3}\s+)\-\-\>(\s+\d{2}:\d{2}:\d{2})\.(\d{3}\s*)/g))
     {
@@ -46,15 +48,15 @@ module.exports = function () {
         }  
         return item;
       }).join(' --> ');
-      vttLine = "\r\n"+vttLine+"\r\n"
+      vttLine = EOL+vttLine+EOL
     }
-    else if(line.match(/(WEBVTT\s*(FILE)?.*)(\r\n)*/g))
+    else if(line.match(reg))
     {
-      var vttLine = line.replace(/(WEBVTT\s*(FILE)?.*)(\r\n)*/g, '')
+      var vttLine = line.replace(reg, '')
     }
     else
     {
-      var vttLine = line+"\r\n";
+      var vttLine = line+EOL;
     }     
                   
 
@@ -69,9 +71,9 @@ module.exports = function () {
       
          if (/^[0-9]+:/m.test(vttLine)) {
             if (count === 0) {
-              vttLine = ++count + '\r' + vttLine;
+              vttLine = ++count + EOL + vttLine;
             } else {
-              vttLine = '\r\n' + ++count + '\r' + vttLine;
+              vttLine = EOL + ++count + EOL + vttLine;
             }
           }
 
