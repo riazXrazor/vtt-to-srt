@@ -1,10 +1,12 @@
 import through from  'through2';
 import split from 'split2';
 import pumpify from 'pumpify';
+import { EOL } from 'os';
 
 module.exports = function() {
 
   let count = 0;
+  const reg = new RegExp(`(WEBVTT\s*(FILE)?.*)(${EOL})*`, 'g' )
   const write = (line, enc, cb) => {
 
       if(!line.trim()) return cb();
@@ -19,7 +21,7 @@ module.exports = function() {
           }  
           return item;
         }).join(' --> ');
-        vttLine = vttLine+"\r\n"
+        vttLine = vttLine+EOL
       }
       else if(line.match(/(\d{2}:\d{2}:\d{2})\.(\d{3}\s+)\-\-\>(\s+\d{2}:\d{2}:\d{2})\.(\d{3}\s*)/g))
       {
@@ -32,15 +34,15 @@ module.exports = function() {
           }  
           return item;
         }).join(' --> ');
-        vttLine = "\r\n"+vttLine+"\r\n"
+        vttLine = EOL+vttLine+EOL
       }
-      else if(line.match(/(WEBVTT\s*(FILE)?.*)(\r\n)*/g))
+      else if(line.match(reg)
       {
-        let vttLine = line.replace(/(WEBVTT\s*(FILE)?.*)(\r\n)*/g, '')
+        let vttLine = line.replace(reg , '')
       }
       else
       {
-        let vttLine = line+"\r\n";
+        let vttLine = line+EOL;
       }    
 
       if(!vttLine.trim()) return cb();
@@ -51,9 +53,9 @@ module.exports = function() {
         
               if (/^[0-9]+:/m.test(vttLine)) {
                 if (count === 0) {
-                  vttLine = `${++count}\r\n${vttLine}`;
+                  vttLine = `${++count}${EOL}${vttLine}`;
                 } else {
-                  vttLine = `\r\n${++count}\r\n${vttLine}`;
+                  vttLine = `${EOL}${++count}${EOL}{vttLine}`;
                 }
               }
 
